@@ -1,0 +1,43 @@
+﻿using System;
+using Telegram.Bot;
+using Telegram.Bot.Types;
+
+namespace ConsoleBot.Helpers
+{
+    internal class ConsoleInformer
+    {
+        internal static void MessageInfo(Message message)
+        {
+            string sender = message.From.ToString();
+            string date = message.Date.ToString();
+            string chat = message.Chat.Title;
+            string msg = message.Text;
+
+            if (chat == null)
+                chat = "private chat";
+
+            Console.WriteLine($"\n>> Sender {sender} ({date}) in chat - {chat}:\n{msg}\n");
+        }
+
+        internal static string GetUser(Message message, bool fullInfo = true)
+        {
+            if (fullInfo)
+                return message.From.ToString();
+            else
+                return message.From.Username;
+        }
+
+        internal static void PrintBotInfo(TelegramBotClient bot)
+        {
+            User me = GetBotInfo(bot);
+
+            Console.WriteLine("=== Information about bot ===");
+            Console.WriteLine($"Username: {me.Username}\nID: {me.Id}\nCan join to groups: {me.CanJoinGroups}\nCan read all group messages: {me.CanReadAllGroupMessages}\n");
+        }
+
+        internal static User GetBotInfo(TelegramBotClient bot)
+        {
+            return bot.GetMeAsync().Result;
+        }
+    }
+}
