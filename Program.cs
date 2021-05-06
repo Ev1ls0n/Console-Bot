@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types;
 
 using ConsoleBot.Commands;
 using ConsoleBot.Helpers;
@@ -21,17 +22,101 @@ namespace ConsoleBot
             Bot = new TelegramBotClient(BotConfiguration.BotToken); // Получение токена бота
 
             Console.Title = ConsoleInformer.GetBotInfo(Bot).Username;
-            ConsoleInformer.PrintBotInfo(Bot);
 
             Bot.OnMessage += BotOnMessageReceived;
             Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
 
             Bot.StartReceiving(Array.Empty<UpdateType>()); // Чтение обновлений с сервера для бота
 
-            Console.WriteLine("Press any key to exit");
-            Console.ReadKey();
+            Menu();
 
             Bot.StopReceiving(); // Прекращение чтение обновлений с сервера для бота (остановка бота)
+        }
+
+        // Метод главного меню программы
+        private static void Menu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("(i) Input the menu item number.\n1. Send message via console\n2. Bot info\n3. Exit");
+                //Console.Write("Input: ");
+
+                int menuItem;
+
+                while (true)
+                {
+                    bool isCorrect = Int32.TryParse(Console.ReadLine(), out menuItem);
+
+                    if (isCorrect)
+                        break;
+
+                    ConsoleInformer.ErrorMessage("Incorrect input. Please try again.");
+                }
+
+                Console.Clear();
+
+                switch (menuItem)
+                {
+                    case 1:
+                        SendConsoleMessage();
+                        Console.ReadKey();
+                        break;
+                    case 2:
+                        ConsoleInformer.PrintBotInfo(Bot);
+                        Console.ReadKey();
+                        break;
+                    case 3:
+                        return; // Выход из программы
+                    default:
+                        ConsoleInformer.ErrorMessage("Non-existent menu item.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        // Метод отправки сообщения ботом в чат через консоль
+        private static async void SendConsoleMessage()
+        {
+            long currentId; // Может встретиться ID, значение которого не поместится в тип данных int
+            string msg;
+
+            ChatId id;
+
+            Console.WriteLine("(i) Send message via console.");
+            Console.Write("Enter chat id: ");
+
+            while (true)
+            {
+                bool isCorrect = long.TryParse(Console.ReadLine(), out currentId);
+
+                if (isCorrect)
+                    break;
+
+                ConsoleInformer.ErrorMessage("Incorrect input. Please try again.");
+            }
+
+            id = new ChatId(currentId);
+
+            Console.Write("Enter the message: ");
+            msg = Console.ReadLine();
+
+            try
+            {
+                await Bot.SendTextMessageAsync(
+                    chatId: id,
+                    text: msg
+                );
+            }
+            catch (Telegram.Bot.Exceptions.ChatNotInitiatedException)
+            {
+                ConsoleInformer.ErrorMessage("This user has not yet initiated a chat with the bot.");
+            }
+            catch (Telegram.Bot.Exceptions.ApiRequestException)
+            {
+                ConsoleInformer.ErrorMessage("Bot was blocked by the user.");
+            }
         }
 
         // Метод для обработки входящих от пользователя команд (чтение сообщений от пользователя)

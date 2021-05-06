@@ -16,7 +16,7 @@ namespace ConsoleBot.Helpers
             if (chat == null)
                 chat = "private chat";
 
-            Console.WriteLine($"\n>> Sender {sender} ({date}) in chat - {chat}:\n{msg}\n");
+            Console.WriteLine($"\n>> Sender {sender} ({date}) in chat - {chat} ({message.Chat.Id}):\n{msg}\n");
         }
 
         internal static string GetUser(Message message, bool fullInfo = true)
@@ -31,13 +31,20 @@ namespace ConsoleBot.Helpers
         {
             User me = GetBotInfo(bot);
 
-            Console.WriteLine("=== Information about bot ===");
-            Console.WriteLine($"Username: {me.Username}\nID: {me.Id}\nCan join to groups: {me.CanJoinGroups}\nCan read all group messages: {me.CanReadAllGroupMessages}\n");
+            Console.WriteLine("(i) Information about bot.");
+            Console.WriteLine($"- Username: {me.Username}\n- ID: {me.Id}\n- Can join to groups: {me.CanJoinGroups}\n- Can read all group messages: {me.CanReadAllGroupMessages}\n");
         }
 
         internal static User GetBotInfo(TelegramBotClient bot)
         {
             return bot.GetMeAsync().Result;
+        }
+
+        internal static void ErrorMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"(!) {message}");
+            Console.ResetColor();
         }
     }
 }
