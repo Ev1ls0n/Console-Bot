@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+
 
 using ConsoleBot.Commands;
 using ConsoleBot.Helpers;
@@ -39,8 +41,8 @@ namespace ConsoleBot
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("(i) Input the menu item number.\n1. Send message via console\n2. Bot info\n3. Exit");
-                //Console.Write("Input: ");
+                Console.WriteLine("(i) Input the menu item number.\n1. Send message via console\n2. Bot info\n3. Log\n4. Exit");
+                Console.Write("Input: ");
 
                 int menuItem;
 
@@ -67,6 +69,10 @@ namespace ConsoleBot
                         Console.ReadKey();
                         break;
                     case 3:
+                        Logger.ReadLog();
+                        Console.ReadKey();
+                        break;
+                    case 4:
                         return; // Выход из программы
                     default:
                         ConsoleInformer.ErrorMessage("Non-existent menu item.");
@@ -140,7 +146,7 @@ namespace ConsoleBot
 
             // ---
 
-            ConsoleInformer.MessageInfo(e.Message); // Вывод на консоль информации о сообщении пользователя
+            Logger.AddData(ConsoleInformer.MessageInfo(e.Message)); // Дабавление информации о сообщении пользователя в специальный файл (log.txt)
 
             // Поиск и вызов введенной команды
             foreach (var command in Commands)
@@ -219,7 +225,7 @@ namespace ConsoleBot
                 }
             }
 
-            Console.WriteLine($"(i) End callback query received. Callback data: {callbackQuery.Data}");
+            Logger.AddData($"(i) End callback query received. Callback data: {callbackQuery.Data}");
 
         }
     }

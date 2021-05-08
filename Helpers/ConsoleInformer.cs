@@ -6,7 +6,7 @@ namespace ConsoleBot.Helpers
 {
     internal class ConsoleInformer
     {
-        internal static void MessageInfo(Message message)
+        internal static string MessageInfo(Message message)
         {
             string sender = message.From.ToString();
             string date = message.Date.ToString();
@@ -16,7 +16,8 @@ namespace ConsoleBot.Helpers
             if (chat == null)
                 chat = "private chat";
 
-            Console.WriteLine($"\n>> Sender {sender} ({date}) in chat - {chat} ({message.Chat.Id}):\n{msg}\n");
+            //Console.WriteLine($"\n>> Sender {sender} ({date}) in chat - {chat} ({message.Chat.Id}):\n{msg}\n");
+            return $"> Sender {sender} ({date}) in chat - {chat} ({message.Chat.Id}):\n{msg}\n";
         }
 
         internal static string GetUser(Message message, bool fullInfo = true)

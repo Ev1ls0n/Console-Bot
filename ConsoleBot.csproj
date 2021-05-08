@@ -64,6 +64,7 @@
     <Compile Include="Commands\InfoCommand.cs" />
     <Compile Include="Commands\KeyboardCommand.cs" />
     <Compile Include="Helpers\ConsoleInformer.cs" />
+    <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

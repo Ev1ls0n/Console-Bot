@@ -1,8 +1,9 @@
-﻿using System;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+
+using ConsoleBot.Helpers;
 
 namespace ConsoleBot.Commands
 {
@@ -19,7 +20,7 @@ namespace ConsoleBot.Commands
                 replyMarkup: new InlineKeyboardMarkup(new[] { new[] { InlineKeyboardButton.WithCallbackData("Delete message", "delete_msg") } })
             );
 
-            Console.WriteLine($"Darts result: {msg.Dice.Value}");
+            Logger.AddData($"(i) Darts result: {msg.Dice.Value}");
         }
     }
 }
