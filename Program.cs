@@ -6,15 +6,15 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-
 using ConsoleBot.Commands;
 using ConsoleBot.Helpers;
+using ConsoleBot.UI;
 
 namespace ConsoleBot
 {
     class Program
     {
-        private static TelegramBotClient Bot; // Объект клиента бота
+        internal static TelegramBotClient Bot { get; private set; } // Объект клиента бота
 
         private static List<Command> CommandsList; // Список подключенных команд бота
         private static IReadOnlyList<Command> Commands { get => CommandsList.AsReadOnly(); } // Делает список команд доступным только для чтения
@@ -30,60 +30,13 @@ namespace ConsoleBot
 
             Bot.StartReceiving(Array.Empty<UpdateType>()); // Чтение обновлений с сервера для бота
 
-            Menu();
+            UserInterface.MainMenu();
 
             Bot.StopReceiving(); // Прекращение чтение обновлений с сервера для бота (остановка бота)
         }
 
-        // Метод главного меню программы
-        private static void Menu()
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("(i) Input the menu item number.\n1. Send message via console\n2. Bot info\n3. Log\n4. Exit");
-                Console.Write("Input: ");
-
-                int menuItem;
-
-                while (true)
-                {
-                    bool isCorrect = Int32.TryParse(Console.ReadLine(), out menuItem);
-
-                    if (isCorrect)
-                        break;
-
-                    ConsoleInformer.ErrorMessage("Incorrect input. Please try again.");
-                }
-
-                Console.Clear();
-
-                switch (menuItem)
-                {
-                    case 1:
-                        SendConsoleMessage();
-                        Console.ReadKey();
-                        break;
-                    case 2:
-                        ConsoleInformer.PrintBotInfo(Bot);
-                        Console.ReadKey();
-                        break;
-                    case 3:
-                        Logger.ReadLog();
-                        Console.ReadKey();
-                        break;
-                    case 4:
-                        return; // Выход из программы
-                    default:
-                        ConsoleInformer.ErrorMessage("Non-existent menu item.");
-                        Console.ReadKey();
-                        break;
-                }
-            }
-        }
-
         // Метод отправки сообщения ботом в чат через консоль
-        private static async void SendConsoleMessage()
+        internal static async void SendConsoleMessage()
         {
             long currentId; // Может встретиться ID, значение которого не поместится в тип данных int
             string msg;
